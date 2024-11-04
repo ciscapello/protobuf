@@ -1,16 +1,27 @@
 syntax = "proto3";
 
 package auth;
+
 option go_package = "github.com/ciscapello/protobuf/auth;authpb";
 
 service AuthService {
-	rpc Register (RegisterReguest) returns (RegisterResponse);
+  rpc Register(RegisterReguest) returns (RegisterResponse);
+  rpc CheckCode(CheckCodeRequest) returns (CheckCodeResponse);
 }
 
 message RegisterReguest {
-	string email = 1;
+  string email = 1;
 }
 
 message RegisterResponse {
-	string id = 1;
+  string id = 1;
+}
+
+message CheckCodeRequest {
+  string id = 1;
+  string code = 2;
+}
+
+message CheckCodeResponse {
+  bool is_code_correct = 1;
 }
