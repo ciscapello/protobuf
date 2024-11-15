@@ -19,8 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_Register_FullMethodName  = "/auth.AuthService/Register"
-	AuthService_CheckCode_FullMethodName = "/auth.AuthService/CheckCode"
+	AuthService_Register_FullMethodName    = "/auth.AuthService/Register"
+	AuthService_CheckCode_FullMethodName   = "/auth.AuthService/CheckCode"
+	AuthService_GetUser_FullMethodName     = "/auth.AuthService/GetUser"
+	AuthService_GetAllUsers_FullMethodName = "/auth.AuthService/GetAllUsers"
+	AuthService_UpdateUser_FullMethodName  = "/auth.AuthService/UpdateUser"
+	AuthService_SearchUsers_FullMethodName = "/auth.AuthService/SearchUsers"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -29,6 +33,10 @@ const (
 type AuthServiceClient interface {
 	Register(ctx context.Context, in *RegisterReguest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	CheckCode(ctx context.Context, in *CheckCodeRequest, opts ...grpc.CallOption) (*CheckCodeResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
+	GetAllUsers(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
+	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
 }
 
 type authServiceClient struct {
@@ -57,12 +65,52 @@ func (c *authServiceClient) CheckCode(ctx context.Context, in *CheckCodeRequest,
 	return out, nil
 }
 
+func (c *authServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, AuthService_GetUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetAllUsers(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error) {
+	out := new(GetAllUsersResponse)
+	err := c.cc.Invoke(ctx, AuthService_GetAllUsers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, AuthService_UpdateUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error) {
+	out := new(SearchUsersResponse)
+	err := c.cc.Invoke(ctx, AuthService_SearchUsers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
 type AuthServiceServer interface {
 	Register(context.Context, *RegisterReguest) (*RegisterResponse, error)
 	CheckCode(context.Context, *CheckCodeRequest) (*CheckCodeResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*User, error)
+	GetAllUsers(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
+	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -75,6 +123,18 @@ func (UnimplementedAuthServiceServer) Register(context.Context, *RegisterReguest
 }
 func (UnimplementedAuthServiceServer) CheckCode(context.Context, *CheckCodeRequest) (*CheckCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckCode not implemented")
+}
+func (UnimplementedAuthServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedAuthServiceServer) GetAllUsers(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllUsers not implemented")
+}
+func (UnimplementedAuthServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedAuthServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -125,6 +185,78 @@ func _AuthService_CheckCode_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetAllUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetAllUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetAllUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetAllUsers(ctx, req.(*GetAllUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).SearchUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_SearchUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).SearchUsers(ctx, req.(*SearchUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +271,22 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckCode",
 			Handler:    _AuthService_CheckCode_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _AuthService_GetUser_Handler,
+		},
+		{
+			MethodName: "GetAllUsers",
+			Handler:    _AuthService_GetAllUsers_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _AuthService_UpdateUser_Handler,
+		},
+		{
+			MethodName: "SearchUsers",
+			Handler:    _AuthService_SearchUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
