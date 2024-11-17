@@ -5,7 +5,7 @@ package auth;
 option go_package = "github.com/ciscapello/protobuf/auth;authpb";
 
 service AuthService {
-  rpc Register(RegisterReguest) returns (RegisterResponse);
+  rpc Login(LoginReguest) returns (LoginResponse);
   rpc CheckCode(CheckCodeRequest) returns (CheckCodeResponse);
 
   rpc GetUser(GetUserRequest) returns (User);
@@ -14,12 +14,14 @@ service AuthService {
   rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
 }
 
-message RegisterReguest {
-  string email = 1;
+message LoginReguest {
+  string username = 1;
+  string password = 2;
 }
 
-message RegisterResponse {
-  string id = 1;
+message LoginResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
 }
 
 message CheckCodeRequest {
