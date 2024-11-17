@@ -40,9 +40,7 @@ message GetClaimsRequest {
 
 message GetClaimsResponse {
   string username = 1;
-  string givenName = 2;
-  string familyName = 3;
-  string uid = 4;
+  string uuid = 2;
 }
 
 message CheckCodeRequest {
