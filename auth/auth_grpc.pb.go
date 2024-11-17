@@ -19,12 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_Login_FullMethodName       = "/auth.AuthService/Login"
-	AuthService_CheckCode_FullMethodName   = "/auth.AuthService/CheckCode"
-	AuthService_GetUser_FullMethodName     = "/auth.AuthService/GetUser"
-	AuthService_GetAllUsers_FullMethodName = "/auth.AuthService/GetAllUsers"
-	AuthService_UpdateUser_FullMethodName  = "/auth.AuthService/UpdateUser"
-	AuthService_SearchUsers_FullMethodName = "/auth.AuthService/SearchUsers"
+	AuthService_Login_FullMethodName        = "/auth.AuthService/Login"
+	AuthService_CheckCode_FullMethodName    = "/auth.AuthService/CheckCode"
+	AuthService_RefreshToken_FullMethodName = "/auth.AuthService/RefreshToken"
+	AuthService_GetClaims_FullMethodName    = "/auth.AuthService/GetClaims"
+	AuthService_GetUser_FullMethodName      = "/auth.AuthService/GetUser"
+	AuthService_GetAllUsers_FullMethodName  = "/auth.AuthService/GetAllUsers"
+	AuthService_UpdateUser_FullMethodName   = "/auth.AuthService/UpdateUser"
+	AuthService_SearchUsers_FullMethodName  = "/auth.AuthService/SearchUsers"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -33,6 +35,8 @@ const (
 type AuthServiceClient interface {
 	Login(ctx context.Context, in *LoginReguest, opts ...grpc.CallOption) (*LoginResponse, error)
 	CheckCode(ctx context.Context, in *CheckCodeRequest, opts ...grpc.CallOption) (*CheckCodeResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	GetClaims(ctx context.Context, in *GetClaimsRequest, opts ...grpc.CallOption) (*GetClaimsResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	GetAllUsers(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
@@ -59,6 +63,24 @@ func (c *authServiceClient) Login(ctx context.Context, in *LoginReguest, opts ..
 func (c *authServiceClient) CheckCode(ctx context.Context, in *CheckCodeRequest, opts ...grpc.CallOption) (*CheckCodeResponse, error) {
 	out := new(CheckCodeResponse)
 	err := c.cc.Invoke(ctx, AuthService_CheckCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
+	out := new(RefreshTokenResponse)
+	err := c.cc.Invoke(ctx, AuthService_RefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetClaims(ctx context.Context, in *GetClaimsRequest, opts ...grpc.CallOption) (*GetClaimsResponse, error) {
+	out := new(GetClaimsResponse)
+	err := c.cc.Invoke(ctx, AuthService_GetClaims_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,6 +129,8 @@ func (c *authServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequ
 type AuthServiceServer interface {
 	Login(context.Context, *LoginReguest) (*LoginResponse, error)
 	CheckCode(context.Context, *CheckCodeRequest) (*CheckCodeResponse, error)
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	GetClaims(context.Context, *GetClaimsRequest) (*GetClaimsResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*User, error)
 	GetAllUsers(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
@@ -123,6 +147,12 @@ func (UnimplementedAuthServiceServer) Login(context.Context, *LoginReguest) (*Lo
 }
 func (UnimplementedAuthServiceServer) CheckCode(context.Context, *CheckCodeRequest) (*CheckCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckCode not implemented")
+}
+func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedAuthServiceServer) GetClaims(context.Context, *GetClaimsRequest) (*GetClaimsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClaims not implemented")
 }
 func (UnimplementedAuthServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
@@ -181,6 +211,42 @@ func _AuthService_CheckCode_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).CheckCode(ctx, req.(*CheckCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetClaims_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetClaimsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetClaims(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetClaims_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetClaims(ctx, req.(*GetClaimsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -271,6 +337,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckCode",
 			Handler:    _AuthService_CheckCode_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _AuthService_RefreshToken_Handler,
+		},
+		{
+			MethodName: "GetClaims",
+			Handler:    _AuthService_GetClaims_Handler,
 		},
 		{
 			MethodName: "GetUser",
